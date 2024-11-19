@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+    <key>com.google.iOS.geo.API_KEY</key>
+    <string>value</string>
 </dict>
 </plist>
