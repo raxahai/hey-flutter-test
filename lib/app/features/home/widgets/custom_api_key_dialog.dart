@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CustomApiKeyDialog extends StatelessWidget {
-  final TextEditingController apiKeyController =
-      TextEditingController(text: "AIzaSyCF4YWonXcJUPWDqXNuL4wOSf2O2MCguw4");
+  final TextEditingController apiKeyController = TextEditingController();
   final void Function(String) onPressed;
   final GlobalKey<FormState>? formKey = GlobalKey(debugLabel: "api_key_form");
 
