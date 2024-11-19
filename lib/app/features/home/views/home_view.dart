@@ -19,21 +19,54 @@ class HomeView extends StatelessWidget {
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             title: Text(title),
           ),
-          body: Center(
+          body: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    Get.dialog(
-                      CustomApiKeyDialog(
-                        onPressed: (apiKey) =>
-                            homeController.onSubmitApiKeyPressed(apiKey),
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    ElevatedButton.icon(
+                      onPressed: () => homeController.pickDirectory(
+                        (err) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(err),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                  child: const Text("Enter API KEY"),
+                      icon: const Icon(Icons.folder_open),
+                      label: const Text('Pick a File'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Get.dialog(
+                          CustomApiKeyDialog(
+                            onPressed: (apiKey) =>
+                                homeController.onSubmitApiKeyPressed(apiKey),
+                          ),
+                        );
+                      },
+                      child: const Text("Enter API KEY"),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 30),
+                if (homeController.selectedDirectory.value.isNotEmpty) ...[
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Selected Directory:",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(homeController.selectedDirectory.value),
+                ] else
+                  const Text("No directory selected.",
+                      style: TextStyle(fontSize: 16)),
               ],
             ),
           ),
