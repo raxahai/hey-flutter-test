@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:test_task/app/features/home/controllers/home_controller.dart';
+import 'package:test_task/app/features/home/widgets/custom_api_key_dialog.dart';
+import 'package:test_task/app/widgets/custom_app_bar.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key, required this.title});
@@ -9,34 +11,39 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetX<HomeController>(
-        init: HomeController(),
-        builder: (homeController) {
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-              title: Text(title),
+    return GetBuilder<HomeController>(
+      init: HomeController(),
+      builder: (homeController) {
+        return Scaffold(
+          appBar: CustomAppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: Text(title),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () {
+                    Get.dialog(
+                      CustomApiKeyDialog(
+                        onPressed: (apiKey) =>
+                            homeController.onSubmitApiKeyPressed(apiKey),
+                      ),
+                    );
+                  },
+                  child: const Text("Enter API KEY"),
+                ),
+              ],
             ),
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text(
-                    'You have pushed the button this many times:',
-                  ),
-                  Text(
-                    "${homeController.counter}",
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                ],
-              ),
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: homeController.incrementCounter,
-              tooltip: 'Increment',
-              child: const Icon(Icons.add),
-            ),
-          );
-        });
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: homeController.openMaps,
+            tooltip: 'Open maps',
+            child: const Icon(Icons.map),
+          ),
+        );
+      },
+    );
   }
 }
