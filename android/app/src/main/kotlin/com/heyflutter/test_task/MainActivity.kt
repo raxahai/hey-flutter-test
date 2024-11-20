@@ -15,10 +15,16 @@ class MainActivity: FlutterActivity(){
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
             .setMethodCallHandler { call, result ->
-                if (call.method == "setMetadata") {
-                    setMetadata(call, result)
-                } else {
-                    result.notImplemented()
+                when (call.method) {
+                    "setMetadata" -> {
+                        setMetadata(call, result)
+                    }
+                    "getMetadata" -> {
+                        getMetadata(call, result)
+                    }
+                    else -> {
+                        result.notImplemented()
+                    }
                 }
             }
     }
@@ -39,5 +45,22 @@ class MainActivity: FlutterActivity(){
         } catch (e: Exception) {
             result.error("ERROR", "Failed to set metadata", null)
         }
+    }
+
+    private fun getMetadata(call: MethodCall, result: MethodChannel.Result) {
+        val key = call.argument<String>("key")
+        try {
+            val appInfo = packageManager.getApplicationInfo(
+                packageName,
+                PackageManager.GET_META_DATA
+            )
+            val metaData = appInfo.metaData ?: Bundle()
+            val value = metaData.getString(key)
+
+            result.success(value)
+        } catch (e: Exception) {
+            result.error("ERROR", "Failed to set metadata", null)
+        }
+
     }
 }

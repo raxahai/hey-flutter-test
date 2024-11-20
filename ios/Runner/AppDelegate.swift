@@ -29,6 +29,18 @@ import GoogleMaps
                 } else {
                     result(FlutterError(code: "ERROR", message: "Failed to update Info.plist", details: nil))
                 }
+            } else if call.method == "getMetadata" {
+                guard let args = call.arguments as? [String: Any],
+                      let key = args["key"] as? String else {
+                    result(FlutterError(code: "INVALID_ARGUMENT", message: "Key is required", details: nil))
+                    return
+                }
+                let plistPath = Bundle.main.path(forResource: "Info", ofType: "plist")
+                if let plistPath = plistPath, let plistDict = NSMutableDictionary(contentsOfFile: plistPath) {
+                    result(plistDict[key])
+                } else {
+                    result(FlutterError(code: "ERROR", message: "Failed to get key from Info.plist", details: nil))
+                }
             } else {
                 result(FlutterMethodNotImplemented)
             }

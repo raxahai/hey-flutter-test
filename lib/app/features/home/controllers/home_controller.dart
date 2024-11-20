@@ -10,13 +10,20 @@ class HomeController extends GetxController {
   final MetaDataPlatformChannelService metaDataPlatformChannelService =
       MetaDataPlatformChannelServiceImpl();
 
-  void openMaps() {
-    Get.to(const MapView());
+  Future<void> openMaps({required void Function(String) onError}) async {
+    String? value = await metaDataPlatformChannelService.get(Platform.isAndroid
+        ? "com.google.android.geo.API_KEY"
+        : "com.google.iOS.geo.API_KEY");
+    if (value != null && value != "value") {
+      Get.to(const MapView());
+    } else {
+      onError("Enter api key");
+    }
   }
 
-  void onSubmitApiKeyPressed(String apiKey) {
+  Future<void> onSubmitApiKeyPressed(String apiKey) async {
     Get.back();
-    metaDataPlatformChannelService.set(
+    await metaDataPlatformChannelService.set(
         Platform.isAndroid
             ? "com.google.android.geo.API_KEY"
             : "com.google.iOS.geo.API_KEY",

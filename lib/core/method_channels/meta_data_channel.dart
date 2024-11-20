@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 abstract class MetaDataPlatformChannelService {
   Future<void> set(String key, String value);
+  Future<String?> get(String key);
 }
 
 class MetaDataPlatformChannelServiceImpl
@@ -17,6 +18,18 @@ class MetaDataPlatformChannelServiceImpl
       debugPrint(result);
     } catch (e) {
       debugPrint("Error: $e");
+    }
+  }
+
+  @override
+  Future<String?> get(String key) async {
+    try {
+      final result = await platform.invokeMethod('getMetadata', {'key': key});
+      debugPrint(result);
+      return result;
+    } catch (e) {
+      debugPrint("Error: $e");
+      return null;
     }
   }
 }

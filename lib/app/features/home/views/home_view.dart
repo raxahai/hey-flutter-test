@@ -43,8 +43,8 @@ class HomeView extends StatelessWidget {
                       onPressed: () {
                         Get.dialog(
                           CustomApiKeyDialog(
-                            onPressed: (apiKey) =>
-                                homeController.onSubmitApiKeyPressed(apiKey),
+                            onPressed: (apiKey) async => await homeController
+                                .onSubmitApiKeyPressed(apiKey),
                           ),
                         );
                       },
@@ -71,7 +71,11 @@ class HomeView extends StatelessWidget {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: homeController.openMaps,
+            onPressed: () async => await homeController.openMaps(
+              onError: (message) => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message)),
+              ),
+            ),
             tooltip: 'Open maps',
             child: const Icon(Icons.map),
           ),
