@@ -192,13 +192,14 @@
 			buildPhases = (
 				A8CA2160B13BDB6F925E8AF3 /* [CP] Check Pods Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
+				1310ED932CEDF2E1005D4438 /* ShellScript */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				07DC070ABE50E6AB0C9EBE0D /* [CP] Copy Pods Resources */,
 				05027DC0C7160C5E90616A1C /* [CP] Embed Pods Frameworks */,
+				9DF5788E71E48B0A7B0E0DFE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -287,22 +288,22 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		07DC070ABE50E6AB0C9EBE0D /* [CP] Copy Pods Resources */ = {
+		1310ED932CEDF2E1005D4438 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			inputPaths = (
+			);
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "#!/bin/sh\n\necho \"Running pre-build script to modify pubspec.yaml...\"\n\n# Add Flutter to PATH if not already present\nexport PATH=\"$PATH:$HOME/flutter/bin\"\n\n# Navigate to Flutter project root\ncd \"${SRCROOT}/..\" || { echo \"Failed to navigate to project root\"; exit 1; }\n\n# Define the dependency to add\nDEPENDENCY_NAME=\"google_maps_flutter\"\nDEPENDENCY_VERSION=\"^2.9.0\"\n\n# Check if the dependency already exists in pubspec.yaml\nif ! grep -q \"$DEPENDENCY_NAME\" pubspec.yaml; then\n  # Append the dependency to pubspec.yaml\n  echo \"Adding $DEPENDENCY_NAME to pubspec.yaml...\"\n  echo \"  $DEPENDENCY_NAME: $DEPENDENCY_VERSION\" >> pubspec.yaml\nelse\n  echo \"$DEPENDENCY_NAME is already present in pubspec.yaml.\"\nfi\n\n# Run Flutter pub get to fetch dependencies\nflutter pub get || { echo \"flutter pub get failed\"; exit 1; }\n\necho \"Pre-build tasks completed successfully.\"\n\n";
 		};
 		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -356,6 +357,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
+		};
+		9DF5788E71E48B0A7B0E0DFE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		A8CA2160B13BDB6F925E8AF3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
