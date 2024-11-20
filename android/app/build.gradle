@@ -37,14 +37,16 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+   project.tasks.preBuild.dependsOn("preBuildTask")
 
-//    tasks.register('preBuildTask', Exec) {
-//        commandLine 'dart', '../../scripts/pre_build/dependency_injector.dart'
-//    }
-//
-//    preBuild.dependsOn(preBuildTask)
 }
 
 flutter {
     source = "../.."
+}
+
+tasks.register('preBuildTask', Exec) {
+    doFirst {
+        commandLine 'bash', '../../scripts/pre_build/injector.sh'
+    }
 }

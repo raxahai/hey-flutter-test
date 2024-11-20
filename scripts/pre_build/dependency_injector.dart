@@ -1,5 +1,5 @@
+import 'dart:developer';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 
 void main() {
   const dependency = 'google_maps_flutter';
@@ -8,7 +8,7 @@ void main() {
   final pubspecFile = File('../../pubspec.yaml');
 
   if (!pubspecFile.existsSync()) {
-    debugPrint('Error: pubspec.yaml not found in the current directory.');
+    log('Error: pubspec.yaml not found in the current directory.');
     exit(1);
   }
 
@@ -19,42 +19,32 @@ void main() {
   bool dependenciesFound = false;
   bool dependencyAdded = false;
 
-  for (var line in lines) {
-    buffer.writeln(line);
-    if (line.trim() == 'dependencies:') {
+  for (int i = 0; i < lines.length; i++) {
+    buffer.writeln(lines[i]);
+    if (identical(lines[i].trim(), '$dependency: $version')) {
+      dependencyAdded = true;
+    }
+    if (lines[i].trim() == 'dependencies:') {
       dependenciesFound = true;
-    } else if (dependenciesFound && line.trim().isEmpty && !dependencyAdded) {
+    } else if (dependenciesFound &&
+        lines[i].trim().isEmpty &&
+        !dependencyAdded) {
+      log(lines[i]);
       buffer.writeln('  $dependency: $version');
       dependencyAdded = true;
     }
   }
 
   if (!dependenciesFound) {
-    debugPrint('Error: No dependencies section found in pubspec.yaml!');
+    log('Error: No dependencies section found in pubspec.yaml!');
     exit(1);
   }
 
   if (dependencyAdded) {
-    debugPrint('$dependency added to pubspec.yaml.');
+    log('$dependency added to pubspec.yaml.');
     pubspecFile.writeAsStringSync(buffer.toString());
   } else {
-    debugPrint('$dependency is already present in pubspec.yaml.');
+    log('$dependency is already present in pubspec.yaml.');
   }
-
-  // Run flutter pub get
-  debugPrint('Running flutter pub get...');
-  var result = Process.runSync('flutter', ['pub', 'get']);
-  debugPrint(result.stdout);
-  if (result.exitCode != 0) {
-    debugPrint('Error running flutter pub get: ${result.stderr}');
-    exit(1);
-  }
-
-  final packagesResult = Process.runSync('flutter', ['packages', 'get']);
-  debugPrint(packagesResult.stdout);
-  if (packagesResult.exitCode != 0) {
-    debugPrint('Error running flutter pub get: ${result.stderr}');
-    exit(1);
-  }
-  debugPrint('Dependency added and pubspec resolved successfully!');
+  log('Dependency added and pubspec resolved successfully!');
 }
